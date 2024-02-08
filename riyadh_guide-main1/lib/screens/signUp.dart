@@ -30,7 +30,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   'ولاء بلس', 
   'نافع',
   'يور باي',
-  'اس تي'];
+  'اس تي سي'];
   List<String> _selectedBanks = [];
   String? _selectedBank;
   //for email checking
@@ -51,7 +51,7 @@ Map<String, String> _bankImages = {
   'ولاء بلس': 'lib/icons/wallogo.png',
   'نافع': 'lib/icons/naflogo.png',
  'يور باي': 'lib/icons/urlogo.png',
-   'اس تي': 'lib/icons/paylogo.png',
+   'اس تي سي': 'lib/icons/paylogo.png',
   // Add more banks and their corresponding image paths as needed
 };
   final _formKey = GlobalKey<FormState>();
@@ -277,6 +277,7 @@ Map<String, String> _bankImages = {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
+                           const SizedBox(height: 8),
                           // Add the bank selection dropdown here
                           InkWell(
                             onTap: () {

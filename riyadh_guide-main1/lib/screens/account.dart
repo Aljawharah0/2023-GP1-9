@@ -24,13 +24,13 @@ class _accountState extends State<account> {
   TextEditingController _cardsController = TextEditingController();
   final FirebaseAuth auth = FirebaseAuth.instance;
   String? _selectedcard;
+    String uid = '';
   @override
   void initState() {
     super.initState();
     fetchUserData();
   }
 
-  String uid = '';
   void fetchUserData() {
     User? user = FirebaseAuth.instance.currentUser;
 
