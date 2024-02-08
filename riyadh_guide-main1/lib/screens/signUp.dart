@@ -22,7 +22,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
   FocusNode _passwordFocusNode = FocusNode();
   int _passwordStrength = 0;
 
-  List<String> _banks = ['بنك الراجحي', 'بنك الاهلي', 'بنك ساب'];
+  List<String> _banks = ['بنك الراجحي',
+  'بريميوم', // Child of بنك الراجحي
+    'الائتمانية', // Child of بنك الراجحي
+   'بنك الاهلي',
+  'بنك ساب', 
+  'ولاء بلس', 
+  'نافع',
+  'يور باي',
+  'اس تي'];
   List<String> _selectedBanks = [];
   String? _selectedBank;
   //for email checking
@@ -33,6 +41,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String? _ErrorMessage;
   String? _passwordErrorMessage;
 
+// Map associating each bank with its image asset path
+Map<String, String> _bankImages = {
+  'بنك الراجحي': 'lib/icons/rajlogoR.png',
+    'بريميوم': 'lib/icons/rajlogoR.png',
+    'الائتمانية': 'lib/icons/rajlogoR.png',
+  'بنك الاهلي': 'lib/icons/ahlilogoR.png',
+  'بنك ساب': 'lib/icons/sablogo.png',
+  'ولاء بلس': 'lib/icons/wallogo.png',
+  'نافع': 'lib/icons/naflogo.png',
+ 'يور باي': 'lib/icons/urlogo.png',
+   'اس تي': 'lib/icons/paylogo.png',
+  // Add more banks and their corresponding image paths as needed
+};
   final _formKey = GlobalKey<FormState>();
   //bool _buttonClicked = false;
   //bool _showImmediateErrors = true;
@@ -245,12 +266,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ],
                         ),
 
-                      const SizedBox(height: 20),
+                     const SizedBox(height: 20),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'اختر البطاقات التي لديك للحصول على أفضل العروض:',
+                            'اختر البطاقات وبرامج الولاء التي تملكها للحصول على أفضل العروض:',
                             style: TextStyle(
                               color: Color.fromARGB(255, 106, 57, 117),
                               fontWeight: FontWeight.bold,
@@ -273,10 +294,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      _selectedBank ?? 'البطاقات البنكية',
+                                      _selectedBank ?? 'البطاقات البنكية وبرامج الولاء',
                                       style: TextStyle(
                                           color:
-                                              Color.fromARGB(255, 106, 57, 117),
+                                              Color.fromARGB(160, 109, 47, 122),
                                           fontSize: 16),
                                     ),
                                     Icon(Icons.arrow_drop_down,
@@ -299,7 +320,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ],
                       ),
-
                       Text(
                         _ErrorMessage ?? '',
                         style: TextStyle(color: Colors.red),
@@ -435,13 +455,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("البطاقات البنكية"),
+      title: Text(
+  "البطاقات البنكية وبرامج الولاء",
+  style: TextStyle(
+    fontSize: 18, // Adjust the font size as needed
+    color: Color.fromARGB(255, 106, 57, 117),
+  ),
+),
+
           content: Container(
             width: double.minPositive,
             child: BanksCheckList(
               banks: _banks,
               selectedBanks: _selectedBanks,
               changeSelectedBanks: changeSelectedBanks,
+              bankImages: _bankImages,
             ),
           ),
           actions: <Widget>[
@@ -469,44 +497,264 @@ class BanksCheckList extends StatefulWidget {
     required this.banks,
     required this.selectedBanks,
     required this.changeSelectedBanks,
+    required this.bankImages,
   });
 
   final List<String> banks;
   final List<String> selectedBanks;
   final Function changeSelectedBanks;
+   final Map<String, String> bankImages;
   @override
   State<BanksCheckList> createState() => _BanksCheckListState();
 }
 
 class _BanksCheckListState extends State<BanksCheckList> {
   late var _selectedBanks = widget.selectedBanks;
+
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: widget.banks.length,
-      itemBuilder: (BuildContext context, int index) {
-        String bank = widget.banks[index];
-        bool isSelected = _selectedBanks.contains(bank);
-        print(isSelected);
-        return CheckboxListTile(
-          title: Text(bank),
-          value: isSelected,
-          onChanged: (value) {
-            setState(() {
-              if (isSelected) {
-                _selectedBanks.remove(bank);
-              } else {
-                _selectedBanks.add(bank);
-              }
-            });
-            widget.changeSelectedBanks(_selectedBanks);
-          },
-        );
-      },
+    return SizedBox(
+      height: 300, // Adjust the height as needed
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Display 'بنك الراجحي' with logo and without a checkbox
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 16.0),
+              child: Row(
+                children: [
+                  Image.asset(
+                    widget.bankImages['بنك الراجحي'] ?? 'lib/icons/alrajlogo.png',
+                    width: 25,
+                    height: 25,
+                    fit: BoxFit.contain,
+                  ),
+                  SizedBox(width: 8),
+                  Text(
+                    'بنك الراجحي',
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 106, 57, 117),
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Display children of 'الراجحي' with logos and checkboxes
+            for (String childBank in ['بريميوم', 'الائتمانية'])
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 2, horizontal: 20.0),
+                child: CheckboxListTile(
+                  title: Row(
+                    children: [
+                      Image.asset(
+                        widget.bankImages[childBank] ?? 'lib/icons/rajlogo.png',
+                        width: 25,
+                        height: 25,
+                        fit: BoxFit.contain,
+                      ),
+                      SizedBox(width: 4),
+                      Text(
+                        childBank,
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 106, 57, 117),
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                  value: _selectedBanks.contains(childBank),
+                  onChanged: (value) {
+                    setState(() {
+                      if (_selectedBanks.contains(childBank)) {
+                        _selectedBanks.remove(childBank);
+                      } else {
+                        _selectedBanks.add(childBank);
+                      }
+                    });
+                    widget.changeSelectedBanks(_selectedBanks);
+                  },
+                ),
+              ),
+
+            // Display other banks without logos and with checkboxes
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 2.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    for (String bank in widget.banks)
+                      if (bank != 'بنك الراجحي' && bank != 'بريميوم' && bank != 'الائتمانية')
+                        Container(
+                          padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 5.0),
+                          child: CheckboxListTile(
+                            title: Row(
+                              children: [
+                                Image.asset(
+                                  widget.bankImages[bank] ?? 'lib/icons/sablogo.png',
+                                  width: 25,
+                                  height: 25,
+                                  fit: BoxFit.contain,
+                                ),
+                                SizedBox(width: 4),
+                                Text(
+                                  bank,
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 106, 57, 117),
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            value: _selectedBanks.contains(bank),
+                            onChanged: (value) {
+                              setState(() {
+                                if (_selectedBanks.contains(bank)) {
+                                  _selectedBanks.remove(bank);
+                                } else {
+                                  _selectedBanks.add(bank);
+                                }
+                              });
+                              widget.changeSelectedBanks(_selectedBanks);
+                            },
+                          ),
+                        ),
+                  ],
+                ),
+              ),
+            ),
+            // Other widget content...
+          ],
+        ),
+      ),
     );
   }
 }
+
+/*class _BanksCheckListState extends State<BanksCheckList> {
+  late var _selectedBanks = widget.selectedBanks;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          // Display 'بنك الراجحي' with logo and without a checkbox
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 16.0),
+            child: Row(
+              children: [
+                Image.asset(
+                  widget.bankImages['بنك الراجحي'] ?? 'lib/icons/alrajlogo.png',
+                  width: 25,
+                  height: 25,
+                  fit: BoxFit.contain,
+                ),
+                // SizedBox(width: 8),
+                Text(
+                  'بنك الراجحي',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 106, 57, 117),
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Display children of 'الراجحي' with logos and checkboxes
+          for (String childBank in ['بريميوم', 'الائتمانية'])
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 2, horizontal: 20.0),
+              child: CheckboxListTile(
+                title: Row(
+                  children: [
+                    Image.asset(
+                      widget.bankImages[childBank] ?? 'lib/icons/rajlogo.png',
+                      width: 25,
+                      height: 25,
+                      fit: BoxFit.contain,
+                    ),
+                    SizedBox(width: 4),
+                    Text(
+                      childBank,
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 106, 57, 117),
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+                value: _selectedBanks.contains(childBank),
+                onChanged: (value) {
+                  setState(() {
+                    if (_selectedBanks.contains(childBank)) {
+                      _selectedBanks.remove(childBank);
+                    } else {
+                      _selectedBanks.add(childBank);
+                    }
+                  });
+                  widget.changeSelectedBanks(_selectedBanks);
+                },
+              ),
+            ),
+
+          // Display other banks without logos and with checkboxes
+          ListView.builder(
+            shrinkWrap: true,
+            itemCount: widget.banks.length,
+            itemBuilder: (BuildContext context, int index) {
+              String bank = widget.banks[index];
+              if (bank == 'بنك الراجحي' || bank == 'بريميوم' || bank == 'الائتمانية') {
+                // Skip 'الراجحي' and its children
+                return SizedBox.shrink();
+              }
+              String logoImagePath = widget.bankImages[bank] ?? 'lib/icons/sablogo.png';
+              bool isSelected = _selectedBanks.contains(bank);
+
+              return Container(
+                padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 5.0),
+                child: CheckboxListTile(
+                  title: Row(
+                    children: [
+                      Image.asset(
+                        logoImagePath,
+                        width: 25,
+                        height: 25,
+                        fit: BoxFit.contain,
+                      ),
+                      // SizedBox(width: 8),
+                      Text(
+                        bank,
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 106, 57, 117),
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                  value: isSelected,
+                  onChanged: (value) {
+                    setState(() {
+                      if (isSelected) {
+                        _selectedBanks.remove(bank);
+                      } else {
+                        _selectedBanks.add(bank);
+                      }
+                    });
+                    widget.changeSelectedBanks(_selectedBanks);
+                  },
+                ),
+              );
+            },
+          ),
+          // Other widget content...
+        ],
+      ),
+    );
+  }
+}*/
 
 bool _containsUppercase(String value) {
   return value.contains(new RegExp(r'[A-Z]'));
@@ -600,3 +848,5 @@ Future<void> saveUserData(String? userId, String username, String email,
     print("Error saving user data: $e");
   }
 }
+
+
